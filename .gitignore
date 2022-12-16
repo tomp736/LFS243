@@ -1,0 +1,10 @@
+.terraform/*
+.terraform*
+terraform.*
+*.tfvars
+.deploy
+**/hosts
+**/ansible_hosts
+
+terraform/ansible_hosts
+!ansible/inventory/README.md

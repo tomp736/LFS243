@@ -1,0 +1,104 @@
+{
+    "networks": [
+        {
+            "id": "net0",
+            "name": "net0",
+            "ip_range": "10.90.0.0/16",
+            "subnet_ranges": [
+                "10.90.0.0/24"
+            ]
+        },
+        {
+            "id": "netk1",
+            "name": "netk1",
+            "ip_range": "10.91.0.0/16",
+            "subnet_ranges": [
+                "10.91.0.0/24"
+            ]
+        },
+        {
+            "id": "netk2",
+            "name": "netk2",
+            "ip_range": "10.92.0.0/16",
+            "subnet_ranges": [
+                "10.92.0.0/24"
+            ]
+        },
+        {
+            "id": "netk3",
+            "name": "netk3",
+            "ip_range": "10.93.0.0/16",
+            "subnet_ranges": [
+                "10.93.0.0/24"
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "id": "labsys-k1",
+            "state": "enabled",
+            "networks": [
+                { 
+                    "id" : "net0",
+                    "ip" : ""
+                },
+                { 
+                    "id" : "netk1",
+                    "ip" : ""
+                }
+            ],
+            "name": "labsys-k1",
+            "location": "nbg1",
+            "image": "ubuntu-22.04",
+            "server_type": "cx21",
+            "nodetype": "generic",
+            "network_zone": "eu-central",
+            "ssh_user": "sysadmin",
+            "ssh_port": "2222"
+        },
+        {
+            "id": "labsys-k2",
+            "state": "enabled",
+            "networks": [
+                { 
+                    "id" : "net0",
+                    "ip" : ""
+                },
+                { 
+                    "id" : "netk2",
+                    "ip" : ""
+                }
+            ],
+            "name": "labsys-k2",
+            "location": "nbg1",
+            "image": "ubuntu-22.04",
+            "server_type": "cx21",
+            "nodetype": "generic",
+            "network_zone": "eu-central",
+            "ssh_user": "sysadmin",
+            "ssh_port": "2222"
+        },
+        {
+            "id": "labsys-k3",
+            "state": "enabled",
+            "networks": [
+                { 
+                    "id" : "net0",
+                    "ip" : ""
+                },
+                { 
+                    "id" : "netk3",
+                    "ip" : ""
+                }
+            ],
+            "name": "labsys-k3",
+            "location": "nbg1",
+            "image": "ubuntu-22.04",
+            "server_type": "cx21",
+            "nodetype": "generic",
+            "network_zone": "eu-central",
+            "ssh_user": "sysadmin",
+            "ssh_port": "2222"
+        }
+    ]
+}

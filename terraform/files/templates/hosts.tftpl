@@ -1,0 +1,4 @@
+[nodes]
+%{~for node in nodes}
+${node.name} ansible_host=${node.ansible_host}
+%{~endfor}
