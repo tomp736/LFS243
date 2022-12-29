@@ -1,0 +1,12 @@
+- name: Desploy emojivote
+  hosts: emojivoto
+  remote_user: sysadmin
+
+  tasks:
+
+    # - name: Clean namespace
+    #   shell: kubectl delete ns emojivoto
+    #   ignore_errors: true
+
+    - name: Install emojivote.
+      shell: curl -sL https://run.linkerd.io/emojivoto.yml | kubectl apply -f -

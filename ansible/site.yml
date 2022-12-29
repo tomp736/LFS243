@@ -1,4 +1,5 @@
 ---
 # file: site.yml
 
-- import_playbook: playbooks/kubernetes.yml
+- import_playbook: playbooks/k8s_init.yml
+- import_playbook: playbooks/k8s_components.yml

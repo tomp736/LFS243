@@ -1,0 +1,42 @@
+- name: Initialize Single Node K8S Clusters
+  hosts: nodes
+  remote_user: sysadmin
+
+  tasks: 
+  
+    - name: Create directory.
+      ansible.builtin.file:
+        path: ingress-nginx
+        state: directory
+        mode: '0755'
+
+    - name: Install ingress nginx controller with service configured as NodePort.
+      ansible.builtin.copy:
+        src: "files/ingress-nginx-controller.yaml"
+        dest: "ingress-nginx/ingress-nginx-controller.yaml"
+
+    - shell: kubectl apply -f ingress-nginx/ingress-nginx-controller.yaml
+
+    - name: Create directory.
+      ansible.builtin.file:
+        path: cert-manager
+        state: directory
+        mode: '0755'
+
+    - ansible.builtin.copy:
+        src: "files/cert-manager.yaml"
+        dest: "cert-manager/cert-manager.yaml"
+
+    - ansible.builtin.copy:
+        src: "files/cert-manager.crds.yaml"
+        dest: "cert-manager/cert-manager.crds.yaml"
+
+    - ansible.builtin.copy:
+        src: "files/cluster-issuer.yaml"
+        dest: "cert-manager/cluster-issuer.yaml"
+
+    - shell: |
+        sleep 60
+        kubectl apply -f cert-manager/cert-manager.crds.yaml
+        kubectl apply -f cert-manager/cert-manager.yaml
+        kubectl apply -f cert-manager/cluster-issuer.yaml

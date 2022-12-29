@@ -1,0 +1,7 @@
+---
+# file: site.yml
+
+- import_playbook: playbooks/k8s_app_emojivoto.yaml
+- import_playbook: playbooks/k8s_sm_consul.yml
+- import_playbook: playbooks/k8s_sm_istio.yml
+- import_playbook: playbooks/k8s_sm_linkerd.yml

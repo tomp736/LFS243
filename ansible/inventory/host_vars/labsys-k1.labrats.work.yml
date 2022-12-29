@@ -1,0 +1,6 @@
+kubernetes_init:
+  iface_name: netk1
+  clusterName: k1
+  kubernetesVersion: "1.25.0"
+  serviceSubnet: "10.96.0.0/12"
+  podSubnet: "10.244.0.0/16"
