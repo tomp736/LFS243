@@ -13,7 +13,7 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - labsys-k1.labrats.work
+    - emoji.labsys-k1.labrats.work
     secretName: tlstest
   rules:
   - http:

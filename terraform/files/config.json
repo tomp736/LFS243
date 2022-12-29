@@ -36,7 +36,7 @@
     "nodes": [
         {
             "id": "labsys-k1",
-            "state": "enabled",
+            "state": "disabled",
             "networks": [
                 { 
                     "id" : "netk1",
@@ -55,7 +55,7 @@
         },
         {
             "id": "labsys-k2",
-            "state": "enabled",
+            "state": "disabled",
             "networks": [
                 { 
                     "id" : "netk2",
@@ -84,7 +84,7 @@
             "name": "labsys-k3.labrats.work",
             "location": "nbg1",
             "image": "ubuntu-22.04",
-            "server_type": "cx21",
+            "server_type": "cpx21",
             "nodetype": "generic",
             "network_zone": "eu-central",
             "ssh_user": "sysadmin",
