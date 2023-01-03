@@ -1,0 +1,87 @@
+---
+# file: istio.yml
+- name: Deploy istio changes.
+  hosts: labsys-istio.lfs243.labrats.work
+  remote_user: sysadmin
+  vars:
+    ISTIO_VERSION: 1.16.1
+
+  tasks: 
+
+    # - name: Run istio check.
+    #   shell: istioctl verify-install
+    #   register: istio_check
+
+    - name: Install Linkerd if command failed.
+      #when: istio_check.rc != 0
+      block:
+
+      - name: Download linkerd installer script.
+        get_url:
+          url: "https://istio.io/downloadIstio"
+          dest: istio_install.sh
+          mode: '0755'
+
+      - name: Run the installer script.
+        command: sh istio_install.sh ISTIO_VERSION={{ ISTIO_VERSION }}
+
+      - name: Run the installer script.
+        become: yes
+        command: cp istio-{{ ISTIO_VERSION }}/bin/istioctl /usr/local/bin/          
+
+      - name: Run istio check.
+        shell: istioctl x precheck
+        ignore_errors: true
+
+      - name: Run istio install.
+        shell: istioctl install --set values.gateways.istio-ingressgateway.enabled=false -y
+        ignore_errors: true
+
+      - name: Generate local manifest.
+        shell: istioctl manifest generate --set values.gateways.istio-ingressgateway.enabled=false --set values.global.jwtPolicy=third-party-jwt > istio-manifest.yaml
+        ignore_errors: true
+
+      - name: Run linkerd install.
+        shell: kubectl apply -f istio-{{ ISTIO_VERSION }}/samples/addons/grafana.yaml
+        ignore_errors: true
+
+    - name: Create emojivote directory.
+      ansible.builtin.file:
+        path: emojivote
+        state: directory
+        mode: '0755'
+
+    - name: Copy ingress for emojivote.
+      ansible.builtin.copy:
+        src: "files/istio/ingress.yaml"
+        dest: "emojivote/ingress.yaml"
+
+    - name: Emojivoto with istioctl injection
+      shell: curl -sL https://run.linkerd.io/emojivoto.yml | istioctl kube-inject -f - | kubectl apply -f -
+
+    - shell: kubectl apply -f emojivote/ingress.yaml
+
+    - name: Curl Pod
+      ansible.builtin.copy:
+        src: "files/istio/curl-pod.yaml"
+        dest: "curl-pod.yaml"
+
+    - shell: kubectl apply -f curl-pod.yaml
+
+    - name: Istio PeerAuthentication
+      ansible.builtin.file:
+        path: istio
+        state: directory
+        mode: '0755'
+
+    - ansible.builtin.copy:
+        src: "files/istio/peerauth.yaml"
+        dest: "istio/peerauth.yaml"
+
+    - shell: kubectl apply -f istio/peerauth.yaml
+
+    - shell: 'kubectl exec curl-pod -- curl -s -o /dev/null -w "Upstream Response Code: %{http_code}\n" http://web-svc.emojivoto/'
+      ignore_errors: true
+
+    - shell: kubectl delete -f istio/peerauth.yaml
+

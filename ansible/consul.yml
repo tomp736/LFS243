@@ -1,0 +1,55 @@
+---
+# file: consul.yml
+- name: Deploy consul changes.
+  hosts: labsys-consul.lfs243.labrats.work
+  remote_user: sysadmin
+
+  tasks:
+
+    - name: add hashicorp helm repo
+      command: helm repo add hashicorp https://helm.releases.hashicorp.com
+
+    - name: Create namespace pseudo declaritively
+      shell: kubectl create namespace consul -o yaml --dry-run=client | kubectl apply -f -
+
+    - name: Consul Directory
+      ansible.builtin.file:
+        path: consul
+        state: directory
+        mode: '0755'
+
+    - name: Consul Data Directory
+      become: yes
+      ansible.builtin.file:
+        path: /srv/consul/data
+        state: directory
+        owner: sysadmin
+        group: sysadmin
+        mode: '0775'
+
+    - ansible.builtin.copy:
+        src: "files/consul/consul.vars.yaml"
+        dest: "consul/consul.vars.yaml"
+
+    - ansible.builtin.copy:
+        src: "files/consul/consul.pv.yaml"
+        dest: "consul/consul.pv.yaml"
+
+    - name: Helm install consul
+      shell: kubectl apply -f consul/consul.pv.yaml
+
+    - name: Helm install consul
+      shell: helm upgrade --install -n consul consul hashicorp/consul --wait -f consul/consul.vars.yaml
+
+    - name: Get yq for annotations
+      become: yes
+      shell: |
+        wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+        chmod a+x /usr/local/bin/yq
+
+    - name: Emojivoto with istioctl injection
+      shell: |
+        curl -sL https://run.linkerd.io/emojivoto.yml -o emojivoto.yaml
+        yq '. | select(.kind != "Deployment")' emojivoto.yaml | kubectl apply -f -
+        # yq '. | select(.kind == "Deployment")' emojivoto.yaml | kubectl apply -f -
+        yq '. | select(.kind == "Deployment") | .spec.template.metadata.annotations."consul.hashicorp.com/connect-inject"="true"' emojivoto.yaml | kubectl apply -f -
