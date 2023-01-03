@@ -7,12 +7,3 @@ ${node.name} ansible_host=${node.ansible_host}
 %{~for node in nodes}
 ${node.name}
 %{~endfor}
-
-[consul]
-labsys-k1.labrats.work
-
-[istio]
-labsys-k2.labrats.work
-
-[linkerd]
-labsys-k3.labrats.work

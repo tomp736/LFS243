@@ -23,65 +23,19 @@
             "subnet_ranges": [
                 "10.93.0.0/24"
             ]
-        },
-        {
-            "id": "netk4",
-            "name": "netk4",
-            "ip_range": "10.94.0.0/16",
-            "subnet_ranges": [
-                "10.94.0.0/24"
-            ]
         }
     ],
     "nodes": [
         {
-            "id": "labsys-k1",
-            "state": "disabled",
+            "id": "labsys-consul",
+            "state": "enabled",
             "networks": [
                 { 
                     "id" : "netk1",
                     "ip" : ""
                 }
             ],
-            "name": "labsys-k1.labrats.work",
-            "location": "nbg1",
-            "image": "ubuntu-22.04",
-            "server_type": "cx21",
-            "nodetype": "generic",
-            "network_zone": "eu-central",
-            "ssh_user": "sysadmin",
-            "ssh_port": "2222",
-            "ipv6_enabled": false
-        },
-        {
-            "id": "labsys-k2",
-            "state": "disabled",
-            "networks": [
-                { 
-                    "id" : "netk2",
-                    "ip" : ""
-                }
-            ],
-            "name": "labsys-k2.labrats.work",
-            "location": "nbg1",
-            "image": "ubuntu-22.04",
-            "server_type": "cx21",
-            "nodetype": "generic",
-            "network_zone": "eu-central",
-            "ssh_user": "sysadmin",
-            "ssh_port": "2222",
-            "ipv6_enabled": false
-        },
-        {
-            "id": "labsys-k3",
-            "state": "enabled",
-            "networks": [
-                { 
-                    "id" : "netk3",
-                    "ip" : ""
-                }
-            ],
-            "name": "labsys-k3.labrats.work",
+            "name": "labsys-consul",
             "location": "nbg1",
             "image": "ubuntu-22.04",
             "server_type": "cpx21",
@@ -92,18 +46,37 @@
             "ipv6_enabled": false
         },
         {
-            "id": "labsys-k4",
+            "id": "labsys-istio",
             "state": "disabled",
             "networks": [
                 { 
-                    "id" : "netk4",
+                    "id" : "netk2",
                     "ip" : ""
                 }
             ],
-            "name": "labsys-k4.labrats.work",
+            "name": "labsys-istio",
             "location": "nbg1",
             "image": "ubuntu-22.04",
-            "server_type": "cx21",
+            "server_type": "cpx21",
+            "nodetype": "generic",
+            "network_zone": "eu-central",
+            "ssh_user": "sysadmin",
+            "ssh_port": "2222",
+            "ipv6_enabled": false
+        },
+        {
+            "id": "labsys-linkerd",
+            "state": "disabled",
+            "networks": [
+                { 
+                    "id" : "netk3",
+                    "ip" : ""
+                }
+            ],
+            "name": "labsys-linkerd",
+            "location": "nbg1",
+            "image": "ubuntu-22.04",
+            "server_type": "cpx21",
             "nodetype": "generic",
             "network_zone": "eu-central",
             "ssh_user": "sysadmin",

@@ -107,3 +107,6 @@
       with_items:
       - node-role.kubernetes.io/control-plane-
       - node-role.kubernetes.io/master-
+        
+    - name: Wait for all k8s nodes to be ready
+      shell: kubectl wait --for=condition=Ready nodes --all --timeout=600s

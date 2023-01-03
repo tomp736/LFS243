@@ -36,7 +36,6 @@
         dest: "cert-manager/cluster-issuer.yaml"
 
     - shell: |
-        sleep 60
         kubectl apply -f cert-manager/cert-manager.crds.yaml
         kubectl apply -f cert-manager/cert-manager.yaml
         kubectl apply -f cert-manager/cluster-issuer.yaml

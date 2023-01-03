@@ -2,7 +2,7 @@
 
 module "networks" {
   for_each = local.config_networks
-  source   = "git::https://github.com/labrats-work/modules-terraform.git//modules/hetzner/network?ref=1.0.2"
+  source   = "git::https://github.com/labrats-work/modules-terraform.git//modules/hetzner/network?ref=1.0.4"
 
 
   network_name          = each.value.name
@@ -15,7 +15,7 @@ data "hetznerdns_zone" "dns_zone" {
 }
 
 module "node_group" {
-  source = "git::https://github.com/labrats-work/modules-terraform.git//modules/hetzner/node_group?ref=1.0.2"
+  source = "git::https://github.com/labrats-work/modules-terraform.git//modules/hetzner/node_group?ref=1.0.4"
   nodes  = local.config_nodes
   public_keys = [
     var.public_key
@@ -32,11 +32,21 @@ module "node_group" {
   }
 }
 
-resource "hetznerdns_record" "dns_record" {
+resource "hetznerdns_record" "dns_record_host" {
   for_each = module.node_group.nodes
 
   zone_id = data.hetznerdns_zone.dns_zone.id
-  name    = replace("*.${each.value.name}", ".labrats.work", "")
+  name    = "${each.value.name}.lfs243"
+  value   = each.value.ipv4_address
+  type    = "A"
+  ttl     = 60
+}
+
+resource "hetznerdns_record" "dns_record_host_wild" {
+  for_each = module.node_group.nodes
+
+  zone_id = data.hetznerdns_zone.dns_zone.id
+  name    = "*.${each.value.name}.lfs243"
   value   = each.value.ipv4_address
   type    = "A"
   ttl     = 60
@@ -45,7 +55,7 @@ resource "hetznerdns_record" "dns_record" {
 resource "local_file" "ansible_inventory" {
   content = templatefile("files/templates/hosts.tftpl", {
     nodes = [for node in module.node_group.nodes : {
-      name         = node.name,
+      name         = "${node.name}.lfs243.labrats.work",
       ansible_host = node.ipv4_address
     }]
   })
